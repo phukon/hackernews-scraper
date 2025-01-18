@@ -1,7 +1,7 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import http from 'http';
-import pingRouter from './api/routes/ping';
+import scrapeRouter from './api/routes/scrape';
 
 const app = express();
 const server = http.createServer(app);
@@ -11,7 +11,7 @@ const PORT = 3000;
 
 app.use(express.json());
 
-app.use('/api/v0/ping', pingRouter);
+app.use('/api/v0/scrape', scrapeRouter);
 
 wss.on('connection', (ws) => {
   console.log('New client connected');
