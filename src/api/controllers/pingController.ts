@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
 
-export const pingController = (req: Request, res: Response) => {
+export const pingController = ( _: Request, res: Response) => {
   res.json({ message: 'pong' });
 };

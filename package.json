@@ -1,11 +1,11 @@
 {
-  "name": "frontpage-assignment",
+  "name": "hackernews-scraper",
   "version": "1.0.0",
-  "description": "Frontpage backend intern assignment",
+  "description": "Hackernews scraper",
   "main": "index.js",
   "scripts": {
     "ts-prepare": "ts-patch install -s",
-    "dev": "ts-prepare && tsc-watch --onsuccess \"node ./dist/index.js\"",
+    "dev": "pnpm ts-prepare && tsc-watch --onsuccess \"node ./dist/index.js\"",
     "build": "rimraf dist && tsup"
   },
   "author": "Riki Phukon",

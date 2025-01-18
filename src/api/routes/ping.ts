@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { pingController } from '@controllers/pingController';
+import { scrapController } from '@controllers/scrapController';
 
-export const pingRouter: Router = Router();
+const router: Router = Router();
 
-pingRouter.get('/', pingController);
+router.get('/', pingController);
+router.get('/scrap', scrapController);
+
+export default router;
