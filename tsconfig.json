@@ -9,7 +9,9 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "@controllers/*": ["api/controllers/*"],
+      "@routes/*": ["api/routes/*"]
     },
     "plugins": [
       {

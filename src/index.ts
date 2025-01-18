@@ -1,3 +1,10 @@
-import { hello } from "@/lol/hello";
+import { startServer } from './server';
+import { HNScraper } from './scraper/hnScraper';
 
-console.log(hello());
+const scraper = new HNScraper();
+
+startServer();
+
+scraper.scrapeStories().then(stories => {
+  console.log(`Initially scraped ${stories.length} stories`);
+});

@@ -5,17 +5,24 @@
   "main": "index.js",
   "scripts": {
     "ts-prepare": "ts-patch install -s",
-    "dev": "pnpm ts-prepare && tsc-watch --onsuccess \"node ./dist/index.js\"",
-    "build": "tsup"
+    "dev": "ts-prepare && tsc-watch --onsuccess \"node ./dist/index.js\"",
+    "build": "rimraf dist && tsup"
   },
   "author": "Riki Phukon",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.2"
+    "axios": "^1.6.7",
+    "express": "^4.21.2",
+    "jsdom": "^24.0.0",
+    "mysql2": "^3.9.2",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/jsdom": "^21.1.6",
     "@types/node": "^22.10.7",
+    "@types/ws": "^8.5.10",
+    "rimraf": "^6.0.1",
     "ts-patch": "^3.3.0",
     "tsc-alias": "^1.8.10",
     "tsc-watch": "^6.2.1",
