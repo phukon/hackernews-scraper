@@ -72,7 +72,7 @@ export class StoryCollector {
 
           const result = await db.insert(UserTable).values({
             username: userData.id,
-            about: userData.about || null,
+            about: userData.about ? userData.about.substring(0, 65535) : null,
             karma: userData.karma || 0,
             created: new Date(userData.created * 1000),
           });
@@ -186,7 +186,7 @@ export class StoryCollector {
 
         const result = await db.insert(UserTable).values({
           username: userData.id,
-          about: userData.about || null,
+          about: userData.about ? userData.about.substring(0, 65535) : null,
           karma: userData.karma || 0,
           created: new Date(userData.created * 1000),
         });
