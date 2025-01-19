@@ -1,6 +1,8 @@
 CREATE TABLE `comment` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`hn_id` int NOT NULL,
+	`story_id` int NOT NULL,
+	`user_id` int NOT NULL,
 	`parent_id` int NOT NULL,
 	`by` varchar(128) NOT NULL,
 	`text` text NOT NULL,
@@ -16,6 +18,7 @@ CREATE TABLE `comment` (
 CREATE TABLE `story` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`hn_id` int NOT NULL,
+	`user_id` int NOT NULL,
 	`title` varchar(256) NOT NULL,
 	`url` varchar(512),
 	`text` text,

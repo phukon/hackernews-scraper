@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9547110f-d417-4951-9582-8654753cdb06",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5752be57-ca59-4866-b70e-92314cd6e7bd",
+  "prevId": "9547110f-d417-4951-9582-8654753cdb06",
   "tables": {
     "comment": {
       "name": "comment",
@@ -39,7 +39,7 @@
           "name": "parent_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "by": {

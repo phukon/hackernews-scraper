@@ -3,6 +3,7 @@ import { mysqlTable, serial, varchar, text, timestamp, int, boolean } from 'driz
 export const StoryTable = mysqlTable('story', {
   id: serial('id').primaryKey(),
   hn_id: int('hn_id').notNull().unique(),
+  user_id: int('user_id').notNull(),
   title: varchar('title', { length: 256 }).notNull(),
   url: varchar('url', { length: 512 }),
   text: text('text'),

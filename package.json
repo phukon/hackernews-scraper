@@ -7,7 +7,7 @@
     "ts-prepare": "ts-patch install -s",
     "dev": "pnpm ts-prepare && tsc-watch --onsuccess \"node ./dist/index.js\"",
     "build": "rimraf dist && tsup",
-    "db:studio": "drizzle-kit studio",
+    "db:studio": "drizzle-kit studio --port 6969 --host 127.0.0.1 --verbose",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },

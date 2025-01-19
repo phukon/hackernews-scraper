@@ -1,10 +1,11 @@
 import { mysqlTable, serial, varchar, text, timestamp, int, boolean } from 'drizzle-orm/mysql-core';
-import { StoryTable } from './story.schema';
 
 export const CommentTable = mysqlTable('comment', {
-  id: serial('id').primaryKey(), // .references(() => StoryTable.id).notNull(),
+  id: serial('id').primaryKey(),
   hn_id: int('hn_id').notNull().unique(),
-  parent_id: int('parent_id').notNull(),
+  story_id: int('story_id').notNull(),
+  user_id: int('user_id').notNull(),
+  parent_id: int('parent_id'),
   by: varchar('by', { length: 128 }).notNull(),
   text: text('text').notNull(),
   dead: boolean('dead').default(false),
