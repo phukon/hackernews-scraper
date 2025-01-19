@@ -5,12 +5,18 @@ import express from 'express';
 import scrapeRouter from './api/routes/scrape';
 import { StoryCollector } from './utils/storyCollector';
 import configureSockets from './sockets';
+import { resolve } from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const storyCollector = new StoryCollector();
 
 app.use(express.json());
+app.use(express.static(resolve(__dirname, './client/public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(resolve(__dirname, './client/index.html'));
+});
 
 app.use('/api/v0/scrape', scrapeRouter);
 

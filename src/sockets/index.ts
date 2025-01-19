@@ -24,12 +24,6 @@ export default function configure(s: Server) {
     s.on('upgrade', (req, socket, head) => {
         socket.on('error', onSocketPreError);
 
-        if (!!req.headers['BadAuth']) {
-            socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-            socket.destroy();
-            return;
-        }
-
         wss.handleUpgrade(req, socket, head, (ws) => {
             socket.removeListener('error', onSocketPreError);
             wss.emit('connection', ws, req);
