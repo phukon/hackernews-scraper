@@ -4,13 +4,15 @@ interface WebSocketExt extends WebSocket {
 
 (function () {
   let ws: WebSocketExt;
-  const HEARTBEAT_TIMEOUT = ((1000 * 5) + (1000 * 1)); // 5 + 1 second
+  const HEARTBEAT_TIMEOUT = ((1000 * 5) + (1000 * 1));
   const HEARTBEAT_VALUE = 1;
   const messages = <HTMLElement>document.getElementById('messages');
   const wsOpen = <HTMLButtonElement>document.getElementById('ws-open');
-  const wsClose = <HTMLButtonElement>document.getElementById('ws-close');
-  const wsSend = <HTMLButtonElement>document.getElementById('ws-send');
-  const wsInput = <HTMLInputElement>document.getElementById('ws-input');
+  // const wsClose = <HTMLButtonElement>document.getElementById('ws-close');
+  // const wsSend = <HTMLButtonElement>document.getElementById('ws-send');
+  // const wsInput = <HTMLInputElement>document.getElementById('ws-input');
+  const recentStories = <HTMLElement>document.getElementById('recent-stories');
+  const lastUpdate = <HTMLElement>document.getElementById('last-update');
 
   function showMessage(message: string) {
       if (!messages) {
@@ -50,7 +52,17 @@ interface WebSocketExt extends WebSocket {
       return typeof obj === 'object' && Object.prototype.toString.call(obj) === '[object Blob]';
   }
 
-  wsOpen.addEventListener('click', () => {
+  function updateStats(stats: { recentStories: number, timestamp: string }) {
+      if (recentStories) {
+          recentStories.textContent = stats.recentStories.toString();
+      }
+      if (lastUpdate) {
+          const time = new Date(stats.timestamp).toLocaleTimeString();
+          lastUpdate.textContent = time;
+      }
+  }
+
+  function initializeWebSocket() {
       closeConnection();
 
       ws = new WebSocket('ws://localhost:3000') as WebSocketExt;
@@ -79,31 +91,42 @@ interface WebSocketExt extends WebSocket {
               switch (data.type) {
                   case 'NEW_STORY':
                       showMessage(`New story: ${data.data.title} by ${data.data.by}`);
+                      updateStats({
+                          recentStories: data.data.recentStoriesCount,
+                          timestamp: new Date().toISOString()
+                      });
                       break;
                   case 'INITIAL_STATS':
-                      showMessage(`Found ${data.data.recentStories} stories in the last 5 minutes`);
+                      updateStats({
+                          recentStories: data.data.recentStories,
+                          timestamp: data.data.timestamp
+                      });
                       break;
                   default:
                       showMessage(`Received message: ${msg.data}`);
               }
           }
       });
-  });
+  }
 
-  wsClose.addEventListener('click', closeConnection);
+  initializeWebSocket();
 
-  wsSend.addEventListener('click', () => {
-      const val = wsInput?.value;
+  // Update click handlers
+  wsOpen.addEventListener('click', initializeWebSocket);
+  // wsClose.addEventListener('click', closeConnection);
 
-      if (!val) {
-          return;
-      } else if (!ws) {
-          showMessage('No WebSocket connection');
-          return;
-      }
+  // wsSend.addEventListener('click', () => {
+  //     const val = wsInput?.value;
 
-      ws.send(val);
-      showMessage(`Sent "${val}"`);
-      wsInput.value = '';
-  });
+  //     if (!val) {
+  //         return;
+  //     } else if (!ws) {
+  //         showMessage('No WebSocket connection');
+  //         return;
+  //     }
+
+  //     ws.send(val);
+  //     showMessage(`Sent "${val}"`);
+  //     wsInput.value = '';
+  // });
 })();

@@ -1,13 +1,244 @@
+:root {
+    --primary-color: #fff;
+    --secondary-color: #f5f5f5;
+    --accent-color: #cc0000;
+    --text-color: #000;
+    --border-color: #ddd;
+    --bg-color: #fff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 1rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+header {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+}
+
 h1 {
-  color: green;
+    color: var(--accent-color);
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.control-panel {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+}
+
+.control-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background-color: #666;
+    color: white;
 }
 
 .input-block {
-  margin-top: 1em;
+    display: flex;
+    gap: 1rem;
+}
+
+input[type="text"] {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.5rem;
+    font-family: inherit;
+}
+
+.output-panel {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel-header h2 {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 #messages {
-  height: 20em;
-  overflow: auto;
-  margin-top: 1em;
+    background-color: white;
+    color: var(--text-color);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    padding: 1rem;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #990000;
+}
+
+.stats-panel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.stat-label {
+    color: var(--text-color);
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .container {
+        padding: 0 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .stat-box {
+        min-width: 150px;
+    }
+
+    .control-group {
+        flex-direction: column;
+    }
+
+    .input-block {
+        flex-direction: column;
+    }
+
+    input[type="text"] {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-box {
+        min-width: 100%;
+    }
+
+    .panel-header h2 {
+        font-size: 0.8rem;
+    }
+
+    footer {
+        font-size: 0.7rem;
+        text-align: center;
+    }
 }
