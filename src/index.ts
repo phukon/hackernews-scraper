@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+dotenv.config();
+console.log(process.env.DB_HOST);
+
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import http from 'http';

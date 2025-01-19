@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { HNScraper } from '@/lib/hnScraper';
+import { HNScraper } from '@/utils/hnScraper';
 
 const scraper = new HNScraper();
 
