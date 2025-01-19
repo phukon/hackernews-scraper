@@ -26,19 +26,8 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Start the story collector when the server starts
 storyCollector.start().catch(error => {
   console.error('Failed to start story collector:', error);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Shutting down gracefully...');
-  storyCollector.stop();
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
 });
 
 server.listen(PORT, () => {
