@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '@/config/db';
 import { StoryTable } from '@/schema/story.schema';
 import { UserTable } from '@/schema/user.schema';
@@ -16,14 +16,30 @@ export class StoryCollector {
       return;
     }
 
+    if (!(await this.isDbConnected())) {
+      console.error('Database connection could not be established. Skipping story collector.');
+      return;
+    }
+
     this.isRunning = true;
     console.log('Starting story collector service...');
 
     await this.collectStories();
 
+    //TODO: make this configurable and add cleanup
     setInterval(() => {
       this.collectStories();
     }, 30 * 60 * 1000);
+  }
+
+  private async isDbConnected(): Promise<boolean> {
+    try {
+      await db.execute(sql`SELECT 1`);
+      return true;
+    } catch (error) {
+      console.error('Database connection error:', error);
+      return false;
+    }
   }
 
   private async collectStories() {
