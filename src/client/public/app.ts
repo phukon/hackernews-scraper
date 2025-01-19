@@ -37,7 +37,6 @@ interface WebSocketExt extends WebSocket {
       ws.pingTimeout = setTimeout(() => {
           ws.close();
 
-          // business logic for deciding whether or not to reconnect
       }, HEARTBEAT_TIMEOUT);
 
       const data = new Uint8Array(1);
@@ -76,7 +75,17 @@ interface WebSocketExt extends WebSocket {
           if (isBinary(msg.data)) {
               heartbeat();
           } else {
-              showMessage(`Received message: ${msg.data}`);
+              const data = JSON.parse(msg.data);
+              switch (data.type) {
+                  case 'NEW_STORY':
+                      showMessage(`New story: ${data.data.title} by ${data.data.by}`);
+                      break;
+                  case 'INITIAL_STATS':
+                      showMessage(`Found ${data.data.recentStories} stories in the last 5 minutes`);
+                      break;
+                  default:
+                      showMessage(`Received message: ${msg.data}`);
+              }
           }
       });
   });

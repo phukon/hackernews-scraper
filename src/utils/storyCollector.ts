@@ -4,6 +4,7 @@ import { db } from '@/config/db';
 import { StoryTable } from '@/schema/story.schema';
 import { UserTable } from '@/schema/user.schema';
 import { CommentTable } from '@/schema/comment.schema';
+import { broadcast } from '@/sockets';
 
 export class StoryCollector {
   private static readonly HN_API_URL = 'https://hacker-news.firebaseio.com/v0';
@@ -26,10 +27,9 @@ export class StoryCollector {
 
     await this.collectStories();
 
-    //TODO: make this configurable and add cleanup
     setInterval(() => {
       this.collectStories();
-    }, 30 * 60 * 1000);
+    }, 5 * 60 * 1000);
   }
 
   private async isDbConnected(): Promise<boolean> {
@@ -68,6 +68,20 @@ export class StoryCollector {
           try {
             await this.processStory(story);
             console.log(`Successfully processed story ${story.hn_id}`);
+            
+            broadcast({
+              type: 'NEW_STORY',
+              data: {
+                id: story.hn_id,
+                title: story.title,
+                url: story.url,
+                by: story.by,
+                score: story.score,
+                descendants: story.descendants,
+                timestamp: new Date()
+              }
+            });
+            
             return story.hn_id;
           } catch (error) {
             console.error(`Error processing story ${story.hn_id}:`, error);
