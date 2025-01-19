@@ -1,6 +1,6 @@
 [x] jsdom parser
 [x] api parser
-[] drizzle orm
+[x] drizzle orm
 [] manual upgrade
 [] auth
 [] rate limiting
