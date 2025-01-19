@@ -1,6 +1,6 @@
 {
   "name": "hackernews-scraper",
-  "version": "1.0.0",
+  "version": "v.1.0-next.2",
   "description": "Hackernews scraper",
   "main": "./src/index.js",
   "scripts": {

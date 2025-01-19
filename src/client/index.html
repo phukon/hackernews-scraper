@@ -6,22 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hackernews Scraper</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap">
 </head>
 <body>
-    <h1>Test:</h1>
-    <button id="ws-open">
-        Open Connection
-    </button>
-    <button id="ws-close">
-        Close Connection
-    </button>
-    <div class="input-block">
-        <input type="text" id="ws-input">
-        <button id="ws-send">
-            Send message
-        </button>
+    <div class="container">
+        <header>
+            <h1>Hackernews Scraper</h1>
+            <p class="subtitle">Real-time Hacker News story monitoring system</p>
+        </header>
+<!-- 
+        <section class="control-panel">
+            <div class="control-group">
+                <button id="ws-open" class="btn">
+                    Initialize Connection
+                </button>
+                <button id="ws-close" class="btn btn-secondary">
+                    Terminate Connection
+                </button>
+            </div>
+            
+            <div class="input-block">
+                <input type="text" id="ws-input" placeholder="Enter command...">
+                <button id="ws-send" class="btn">
+                    Execute
+                </button>
+            </div>
+        </section> -->
+
+        <section class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-label">Stories (Last 5min)</div>
+                <div id="recent-stories" class="stat-value">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Last Update</div>
+                <div id="last-update" class="stat-value">-</div>
+            </div>
+        </section>
+
+        <section class="output-panel">
+            <div class="panel-header">
+                <h2>System Output</h2>
+            </div>
+            <pre id="messages"></pre>
+        </section>
+
+        <footer>
+            <p>Hackernews Scraper | <a href="https://github.com/phukon/hackernews-scraper" target="_blank">GitHub</a> | Licensed under <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
+        </footer>
     </div>
-    <pre id="messages"></pre>
     <script src="./app.js"></script>
 </body>
 </html>
