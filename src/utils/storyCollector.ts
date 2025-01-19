@@ -55,51 +55,8 @@ export class StoryCollector {
       console.log(`Processing ${newIds.length} new stories...`);
       const stories = await this.fetchStoryDetails(newIds);
       
-      for (const story of stories) {
-        const existingUser = await db
-          .select()
-          .from(UserTable)
-          .where(eq(UserTable.username, story.by))
-          .limit(1);
-
-        let userId: number;
-        
-        if (existingUser.length === 0) {
-          const userResponse = await axios.get(
-            `${StoryCollector.HN_API_URL}/user/${story.by}.json`
-          );
-          const userData = userResponse.data;
-
-          const result = await db.insert(UserTable).values({
-            username: userData.id,
-            about: userData.about ? userData.about.substring(0, 65535) : null,
-            karma: userData.karma || 0,
-            created: new Date(userData.created * 1000),
-          });
-
-          userId = Number(result[0].insertId);
-        } else {
-          userId = existingUser[0].id;
-        }
-
-        await db.insert(StoryTable).values({
-          hn_id: story.hn_id,
-          user_id: userId,
-          title: story.title,
-          url: story.url,
-          text: story.text,
-          by: story.by,
-          score: story.score,
-          descendants: story.descendants,
-          dead: story.dead,
-          deleted: story.deleted,
-          type: story.type,
-        });
-
-        if (story.descendants > 0) {
-          await this.processComments(story.hn_id);
-        }
-      }
+      // Parallelize story processing
+      await Promise.all(stories.map(story => this.processStory(story)));
 
       console.log(`Successfully processed ${stories.length} new stories`);
     } catch (error) {
@@ -144,6 +101,54 @@ export class StoryCollector {
     return results.filter((story): story is NonNullable<typeof story> => story !== null);
   }
 
+  private async processStory(story: any) {
+    const existingUser = await db
+      .select()
+      .from(UserTable)
+      .where(eq(UserTable.username, story.by))
+      .limit(1);
+
+    let userId: number;
+    
+    if (existingUser.length === 0) {
+      const userResponse = await axios.get(
+        `${StoryCollector.HN_API_URL}/user/${story.by}.json`
+      );
+      const userData = userResponse.data;
+
+      const result = await db.insert(UserTable).values({
+        username: userData.id,
+        about: userData.about ? userData.about.substring(0, 50000) : null,
+        karma: userData.karma || 0,
+        created: new Date(userData.created * 1000),
+      }).onDuplicateKeyUpdate({
+        set: {username: userData.id}
+      })
+
+      userId = Number(result[0].insertId);
+    } else {
+      userId = existingUser[0].id;
+    }
+
+    await db.insert(StoryTable).values({
+      hn_id: story.hn_id,
+      user_id: userId,
+      title: story.title,
+      url: story.url,
+      text: story.text,
+      by: story.by,
+      score: story.score,
+      descendants: story.descendants,
+      dead: story.dead,
+      deleted: story.deleted,
+      type: story.type,
+    });
+
+    if (story.descendants > 0) {
+      await this.processComments(story.hn_id);
+    }
+  }
+
   private async processComments(storyId: number) {
     try {
       const response = await axios.get(`${StoryCollector.HN_API_URL}/item/${storyId}.json`);
@@ -153,9 +158,10 @@ export class StoryCollector {
         return;
       }
 
-      for (const commentId of storyData.kids) {
-        await this.processComment(commentId, storyId, null);
-      }
+      // Parallelize top-level comments processing
+      await Promise.all(storyData.kids.map((commentId: number) => 
+        this.processComment(commentId, storyId, null)
+      ));
     } catch (error) {
       console.error(`Error processing comments for story ${storyId}:`, error);
     }
@@ -186,10 +192,12 @@ export class StoryCollector {
 
         const result = await db.insert(UserTable).values({
           username: userData.id,
-          about: userData.about ? userData.about.substring(0, 65535) : null,
+          about: userData.about ? userData.about.substring(0, 50000) : null,
           karma: userData.karma || 0,
           created: new Date(userData.created * 1000),
-        });
+        }).onDuplicateKeyUpdate({
+          set: {username: userData.id}
+        })
 
         userId = Number(result[0].insertId);
       } else {
@@ -209,9 +217,10 @@ export class StoryCollector {
       });
 
       if (comment.kids && Array.isArray(comment.kids)) {
-        for (const childCommentId of comment.kids) {
-          await this.processComment(childCommentId, storyId, comment.id);
-        }
+        // Parallelize child comments processing
+        await Promise.all(comment.kids.map((childCommentId: number) =>
+          this.processComment(childCommentId, storyId, comment.id)
+        ));
       }
     } catch (error) {
       console.error(`Error processing comment ${commentId}:`, error);
