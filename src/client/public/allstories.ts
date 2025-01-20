@@ -17,7 +17,8 @@ async function loadAllStories() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/v0/story/all');
+        const apiUrl = `${window.location.protocol}//${window.location.host}/api/v0/story/all`;
+        const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error('Failed to fetch stories');
         }

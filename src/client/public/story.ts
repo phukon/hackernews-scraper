@@ -11,7 +11,8 @@ async function loadStoryDetails() {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/v0/story/${storyId}`);
+        const apiUrl = `${window.location.protocol}//${window.location.host}/api/v0/story/${storyId}`;
+        const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error('Story not found');
         }

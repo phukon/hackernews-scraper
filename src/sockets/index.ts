@@ -2,7 +2,7 @@ import { Server } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { db } from '@/config/db';
 import { StoryTable } from '@/schema/story.schema';
-import { and, gte, sql } from 'drizzle-orm';
+import { and, desc, gte, sql } from 'drizzle-orm';
 
 const HEARTBEAT_INTERVAL = 1000 * 5;
 const HEARTBEAT_VALUE = 1;
@@ -11,7 +11,35 @@ type WSWithAlive = WebSocket & { isAlive: boolean };
 
 let wss: WebSocketServer;
 
-export function broadcast(message: any) {
+type NewStoryMessage = {
+  type: 'NEW_STORY';
+  data: {
+    hackernews_id: number;
+    title: string;
+    url: string;
+    by: string;
+    score: number;
+    descendants: number;
+    hackernews_time: number;
+  };
+};
+
+type InitialStatsMessage = {
+  type: 'INITIAL_STATS';
+  data: {
+    recentStories: number;
+    recentStoriesList: Array<{
+      title: string;
+      by: string;
+      hackernews_id: number;
+    }>;
+    timestamp: Date;
+  };
+};
+
+type BroadcastMessage = NewStoryMessage;
+
+export function broadcast(message: BroadcastMessage) {
   if (!wss) return;
   
   const messageStr = JSON.stringify(message);
@@ -29,32 +57,44 @@ function onSocketPreError(e: Error) {
 function onSocketPostError(e: Error) {
     console.log(e);
 }
-
 function ping(ws: WebSocket) {
     ws.send(HEARTBEAT_VALUE, { binary: true });
 }
 
 async function sendInitialStats(ws: WebSocket) {
-    try {
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-        
-        const recentStories = await db
-            .select({ count: sql<number>`count(*)` })
-            .from(StoryTable)
-            .where(and(
-                gte(StoryTable.created_at, fiveMinutesAgo)
-            ));
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+  
+  try {
+    const [recentStoriesCount, recentStories] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(StoryTable)
+        .where(and(gte(StoryTable.created_at, fiveMinutesAgo))),
+      db
+        .select({
+          title: StoryTable.title,
+          by: StoryTable.by,
+          hackernews_id: StoryTable.hn_id,
+        })
+        .from(StoryTable)
+        .where(and(gte(StoryTable.created_at, fiveMinutesAgo)))
+        .orderBy(desc(StoryTable.created_at))
+        .limit(10)
+    ]);
 
-        ws.send(JSON.stringify({
-            type: 'INITIAL_STATS',
-            data: {
-                recentStories: recentStories[0].count,
-                timestamp: new Date()
-            }
-        }));
-    } catch (error) {
-        console.error('Error sending initial stats:', error);
-    }
+    const message: InitialStatsMessage = {
+      type: 'INITIAL_STATS',
+      data: {
+        recentStories: recentStoriesCount[0].count,
+        recentStoriesList: recentStories,
+        timestamp: new Date()
+      }
+    };
+
+    ws.send(JSON.stringify(message));
+  } catch (error) {
+    console.error('Error sending initial stats:', error);
+  }
 }
 
 export default function configure(s: Server) {

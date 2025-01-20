@@ -29,7 +29,7 @@ export class StoryCollector {
 
     setInterval(() => {
       this.collectStories();
-    }, 5 * 60 * 1000);
+    }, 60 * 1000);
   }
 
   private async isDbConnected(): Promise<boolean> {

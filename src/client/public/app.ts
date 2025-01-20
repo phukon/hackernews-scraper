@@ -67,20 +67,42 @@ interface StoryMessage {
       return typeof obj === 'object' && Object.prototype.toString.call(obj) === '[object Blob]';
   }
 
-  function updateStats(stats: { recentStories: number, timestamp: string }) {
-      if (recentStories) {
-          recentStories.textContent = stats.recentStories.toString();
-      }
-      if (lastUpdate) {
-          const time = new Date(stats.timestamp).toLocaleTimeString();
-          lastUpdate.textContent = time;
-      }
+  function updateStats(stats: { 
+    recentStories: number, 
+    recentStoriesList?: Array<{
+      title: string;
+      by: string;
+      hackernews_id: number;
+    }>, 
+    timestamp: string 
+  }) {
+    if (recentStories) {
+      recentStories.textContent = stats.recentStories.toString();
+    }
+    if (lastUpdate) {
+      const time = new Date(stats.timestamp).toLocaleTimeString();
+      lastUpdate.textContent = time;
+    }
+
+    if (stats.recentStoriesList && messages) {
+      stats.recentStoriesList.forEach(story => {
+        const storyLink = `<div class="story-entry">
+          <a href="/story.html?id=${story.hackernews_id}" class="story-link">${story.title}</a>
+          <span class="story-author">by ${story.by}</span>
+        </div>`;
+        messages.innerHTML += storyLink;
+      });
+      messages.scrollTop = messages.scrollHeight;
+    }
   }
 
   function initializeWebSocket() {
       closeConnection();
 
-      ws = new WebSocket('ws://localhost:3000') as WebSocketExt;
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
+      
+      ws = new WebSocket(wsUrl) as WebSocketExt;
 
       ws.addEventListener('error', () => {
           showMessage('WebSocket error');
@@ -118,6 +140,7 @@ interface StoryMessage {
                   case 'INITIAL_STATS':
                       updateStats({
                           recentStories: data.data.recentStories,
+                          recentStoriesList: data.data.recentStoriesList,
                           timestamp: data.data.timestamp
                       });
                       break;

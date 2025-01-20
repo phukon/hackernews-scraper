@@ -25,6 +25,7 @@ RUN pnpm install
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/drizzle.config.ts ./
+COPY --from=builder /app/src/schema ./src/schema
 
 EXPOSE 3000
 
@@ -35,4 +36,4 @@ ENV NODE_ENV=production \
     DB_NAME=hackernews \
     DB_PASSWORD=password
 
-CMD pnpm run db:migrate && node dist/index.js
+CMD pnpm run db:generate && pnpm db:migrate && node dist/index.js
