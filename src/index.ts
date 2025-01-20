@@ -43,6 +43,6 @@ storyCollector.start().catch((error) => {
 
 configureSockets(
   app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   }),
 );

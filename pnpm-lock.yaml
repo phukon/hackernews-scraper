@@ -11,6 +11,9 @@ importers:
       axios:
         specifier: ^1.6.7
         version: 1.7.9
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       drizzle-orm:
         specifier: ^0.38.4
         version: 0.38.4(mysql2@3.12.0)
@@ -45,9 +48,6 @@ importers:
       copyfiles:
         specifier: ^2.4.1
         version: 2.4.1
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
       drizzle-kit:
         specifier: ^0.30.2
         version: 0.30.2

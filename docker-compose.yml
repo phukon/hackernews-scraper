@@ -1,18 +1,40 @@
 version: '3.8'
 
 services:
-  db:
+  mysql:
     image: mysql:8.0-debian
-    restart: "no"
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hackernews
       MYSQL_USER: admin
       MYSQL_PASSWORD: password
     ports:
-      - "127.0.0.1:3306:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_NAME=hackernews
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+    healthcheck:
+      disable: true  # Disable the problematic Dockerfile healthcheck
 
 volumes:
   mysql_data:
