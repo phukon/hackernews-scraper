@@ -242,3 +242,111 @@ footer {
         text-align: center;
     }
 }
+
+.story-entry {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.story-link {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.story-link:hover {
+    text-decoration: underline;
+}
+
+.story-author {
+    font-size: 0.8rem;
+    color: #666;
+    margin-left: 0.5rem;
+}
+
+.story-details {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.story-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.story-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.story-url {
+    margin: 1rem 0;
+}
+
+.story-text {
+    background: white;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    margin-top: 1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.error {
+    color: var(--accent-color);
+    text-align: center;
+    padding: 1rem;
+}
+
+.stories-section {
+    margin: 2rem 0;
+}
+
+.story-card {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.story-card:hover {
+    transform: translateX(5px);
+}
+
+.story-card .story-title {
+    margin-bottom: 0.8rem;
+}
+
+.story-card .story-title a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.story-card .story-title a:hover {
+    text-decoration: underline;
+}
+
+.story-card .story-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.story-card .story-url {
+    font-size: 0.9rem;
+}

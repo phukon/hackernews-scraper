@@ -15,6 +15,13 @@
       "when": 1737269736764,
       "tag": "0001_tough_wendell_rand",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1737334030663,
+      "tag": "0002_last_felicia_hardy",
+      "breakpoints": true
     }
   ]
 }

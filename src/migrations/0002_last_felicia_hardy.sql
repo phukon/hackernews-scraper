@@ -1,0 +1,1 @@
+ALTER TABLE `story` ADD `hackernews_time` int NOT NULL;

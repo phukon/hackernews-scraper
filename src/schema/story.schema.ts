@@ -8,6 +8,7 @@ export const StoryTable = mysqlTable('story', {
   url: varchar('url', { length: 512 }),
   text: text('text'),
   by: varchar('by', { length: 128 }).notNull(),
+  hackernews_time: int('hackernews_time').notNull(),
   score: int('score').default(0),
   descendants: int('descendants').default(0),
   dead: boolean('dead').default(false),

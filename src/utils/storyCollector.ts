@@ -64,7 +64,7 @@ export class StoryCollector {
       console.log(`Successfully fetched details for ${stories.length} stories`);
 
       const results = await Promise.allSettled(
-        stories.map(async (story, index) => {
+        stories.map(async (story) => {
           try {
             await this.processStory(story);
             console.log(`Successfully processed story ${story.hn_id}`);
@@ -72,13 +72,13 @@ export class StoryCollector {
             broadcast({
               type: 'NEW_STORY',
               data: {
-                id: story.hn_id,
+                hackernews_id: story.hn_id,
                 title: story.title,
                 url: story.url,
                 by: story.by,
                 score: story.score,
                 descendants: story.descendants,
-                timestamp: new Date()
+                hackernews_time: story.hackernews_time,
               }
             });
             
@@ -131,6 +131,7 @@ export class StoryCollector {
 
         return {
           hn_id: story.id,
+          hackernews_time: story.time,
           title: story.title,
           url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
           text: story.text || null,
@@ -230,6 +231,7 @@ export class StoryCollector {
 
       await db.insert(StoryTable).values({
         hn_id: story.hn_id,
+        hackernews_time: story.hackernews_time,
         user_id: userId,
         title: story.title,
         url: story.url,

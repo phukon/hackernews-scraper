@@ -2,6 +2,12 @@ interface WebSocketExt extends WebSocket {
   pingTimeout: NodeJS.Timeout;
 }
 
+interface StoryMessage {
+    title: string;
+    author: string;
+    hackernewsId: string;
+}
+
 (function () {
   let ws: WebSocketExt;
   const HEARTBEAT_TIMEOUT = ((1000 * 5) + (1000 * 1));
@@ -14,12 +20,21 @@ interface WebSocketExt extends WebSocket {
   const recentStories = <HTMLElement>document.getElementById('recent-stories');
   const lastUpdate = <HTMLElement>document.getElementById('last-update');
 
-  function showMessage(message: string) {
+  function showMessage(message: string | StoryMessage) {
       if (!messages) {
           return;
       }
 
-      messages.textContent += `\n${message}`;
+      if (typeof message === 'object') {
+          const storyLink = `<div class="story-entry">
+              <a href="/story.html?id=${message.hackernewsId}" class="story-link">${message.title}</a>
+              <span class="story-author">by ${message.author}</span>
+          </div>`;
+          messages.innerHTML += storyLink;
+      } else {
+          messages.textContent += `\n${message}`;
+      }
+      
       messages.scrollTop = messages?.scrollHeight;
   }
 
@@ -90,7 +105,11 @@ interface WebSocketExt extends WebSocket {
               const data = JSON.parse(msg.data);
               switch (data.type) {
                   case 'NEW_STORY':
-                      showMessage(`New story: ${data.data.title} by ${data.data.by}`);
+                      showMessage({
+                          title: `${data.data.title} (id:${data.data.hackernews_id})`,
+                          author: data.data.by,
+                          hackernewsId: data.data.hackernews_id
+                      });
                       updateStats({
                           recentStories: data.data.recentStoriesCount,
                           timestamp: new Date().toISOString()
