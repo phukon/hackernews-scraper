@@ -1,4 +1,16 @@
-# HackerNews Story Scraper
+<h1 align="center">hackernews-scraper</h1>
+
+<p align="center">
+    Periodically scrape hackernews stories
+</p>
+
+<p align="center">
+   <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
+   <img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"/>
+</p>
+<br/>
+
+![hacker](https://github.com/user-attachments/assets/8e62aff7-a381-4402-b372-d9c950c6bd5c)
 
 A robust backend service that collects and serves HackerNews stories in real-time, featuring WebSocket connections for live updates and a MySQL database for persistent storage.
 
@@ -33,14 +45,20 @@ A robust backend service that collects and serves HackerNews stories in real-tim
 - Persistent volume for data storage
 - Health check enabled (10s interval)
 
-#### Backend Application
+#### Node.js Scraper service
 - Port: 3000
 - Auto-connects to MySQL database
 - Development mode with source code mounting
 - Environment variables pre-configured
 
 
-## Key Features
+### Docker Setup
+- Multi-stage build process for optimized container size
+- Containerized MySQL 8.0 database
+- Health checks for both database and application
+- Volume persistence for database data
+- Environment variable configuration
+- Development-friendly setup with source code mounting
 
 ### Real-time Story Collection
 - Automated collection of new stories from HackerNews API every 5 minutes
@@ -63,34 +81,12 @@ A robust backend service that collects and serves HackerNews stories in real-tim
   - Comments → Users (many-to-one)
   - Comments → Stories (many-to-one)
 
-### Docker Setup
-- Multi-stage build process for optimized container size
-- Containerized MySQL 8.0 database
-- Health checks for both database and application
-- Volume persistence for database data
-- Environment variable configuration
-- Development-friendly setup with source code mounting
-
-## Technical Implementation
-
 ### Story Collection Process
 - Fetches new stories from HackerNews API
 - Filters out already processed stories
 - Parallel processing of story details
 - Recursive comment collection
 - Real-time WebSocket broadcasts for new stories
-
-### Database Schema
-- User table: Stores HackerNews user information
-- Story table: Maintains story details with user relations
-- Comment table: Stores hierarchical comment structure
-- Efficient indexing and foreign key relationships
-
-### Docker Configuration
-- Backend service runs on port 3000
-- MySQL service with proper credentials and database setup
-- Health monitoring for both services
-- Development-optimized with hot-reload capabilities
 
 ## Environment Variables
 - `DB_HOST`: MySQL host
